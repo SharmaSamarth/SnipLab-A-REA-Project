@@ -1,4 +1,4 @@
-# SnipLab — A Reverse-Engineering Learning Project
+# SnipLab — A REA Project
 
 > [!IMPORTANT]
 > **For learning purposes only.** This project exists to practise reverse-engineering
@@ -26,7 +26,7 @@ similar *features* independently using public, documented Windows APIs.
 9. [What the analysis showed](#what-the-analysis-showed)
 10. [Lessons learned](#lessons-learned)
 11. [Limitations and roadmap](#limitations-and-roadmap)
-12. [REA status](#rea-status)
+12. [Next step: REA](#next-step-rea)
 
 ---
 
@@ -81,7 +81,6 @@ flowchart TD
     G --> H["build.ps1 → SnipLab.exe<br/>(built-in Windows C# compiler)"]
     H --> I["Manual testing"]
     I -- "bugs found" --> G
-    R["REA (reverse-engineering MCP tools)"] -. "blocked by security screening" .-> B
 ```
 
 ## How SnipLab works
@@ -106,8 +105,7 @@ flowchart TD
     R6 --> R7["Preview: Play, Save as, Copy"]
 ```
 
-> The diagrams use [Mermaid](https://mermaid.js.org/). GitHub renders them automatically.
-> In VS Code, install a Mermaid preview extension to see them in the Markdown preview.
+
 
 ## Project structure
 
@@ -117,10 +115,10 @@ REA 2/
 ├── ghidra.ps1                  # launches Ghidra (GUI or headless) with the right JDK
 ├── ghidra-scripts/
 │   └── SummarizeBinary.java    # Ghidra script: imports, exports, feature strings
-├── ghidra-projects/            # Ghidra project with the analysed binaries
+├── ghidra-projects/            # local Ghidra project (not committed)
 └── SnipLab/
     ├── build.ps1               # builds with csc.exe from .NET Framework (no SDK needed)
-    ├── bin/SnipLab.exe         # build output
+    ├── bin/SnipLab.exe         # build output (not committed)
     └── src/
         ├── Program.cs          # entry point, per-monitor DPI awareness
         ├── MainForm.cs         # main window, toolbar, snip/record flow
@@ -244,9 +242,6 @@ left out.
 - **Memory churn causes audio glitches.** Allocating a new multi-megabyte frame buffer 30
   times a second triggered garbage collection about once a second and broke up
   microphone audio. Reusing buffers and waiting for late audio fixed it.
-- **Security tools watch behaviour.** CrowdStrike Falcon blocked an AI-generated test
-  script that loaded the app into PowerShell and captured the screen. Test screen- and
-  audio-capture features manually, and involve your security team early.
 - **Verify what you download.** Ghidra and the JDK were checked against official SHA-256
   checksums before use.
 
@@ -259,18 +254,18 @@ left out.
 - Not explored yet: Ghidra's GUI decompiler, and the .NET module (which needs a .NET
   decompiler rather than Ghidra).
 
-## REA status
+## Next step: REA
 
-REA (reverse-engineer-anything) is an MCP server that would add interactive decompiling,
-.NET analysis, runtime observation and rebuild-coverage checks. It is configured as
-`npx -y rea-agents@6.8.0 mcp`, which downloads and runs the package on every start, so the
-organisation's skill screening blocked it as unreviewed downloaded code. To use it:
+REA (reverse-engineer-anything) is an MCP server for AI-assisted reverse engineering. This
+version of the project used Ghidra on its own; REA is the planned next step and would add:
 
-1. Ask IT/Security to review `rea-agents@6.8.0`.
-2. If approved, install it locally (`npm install -g rea-agents@6.8.0`).
-3. Point the `rea` server in `.claude.json` at the local `rea mcp`.
-4. Re-run the screening. Runtime-observation features (process capture, Frida) also need
-   Security's approval, since they behave like monitoring tools.
+- interactive decompiling and call-graph tracing from inside the AI assistant
+- .NET analysis of managed modules, which Ghidra does not cover well
+- tracing a feature (for example "Quick redact") through the binary end to end
+- rebuild-coverage checks comparing SnipLab's features against the analysis findings
+
+Setup: install it locally (`npm install -g rea-agents@6.8.0`) and add a `rea` MCP server
+that runs `rea mcp`.
 
 ---
 
