@@ -1,0 +1,42 @@
+# --- Ghidra ---------------------------------------------------------------
+# Analysis projects hold imported copies of the binaries that were analysed
+# (Microsoft's files). They must never be published.
+ghidra-projects/
+*.gpr
+*.rep/
+*.lock
+*.lock~
+
+# --- Build output ---------------------------------------------------------
+# Build locally with SnipLab/build.ps1 instead of committing binaries.
+SnipLab/bin/
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.winmd
+
+# --- Captures made while testing -----------------------------------------
+# Screenshots and recordings can contain whatever was on screen.
+*.mp4
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+Screenshots/
+Screen Recordings/
+
+# --- Editors and tools ----------------------------------------------------
+.vs/
+.vscode/
+.idea/
+*.suo
+*.user
+.claude/
+
+# --- OS -------------------------------------------------------------------
+Thumbs.db
+desktop.ini
+.DS_Store
